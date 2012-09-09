@@ -87,6 +87,7 @@ namespace Play.Models
             var rq = rqFactory(HttpMethod.Get, String.Format("images/art/{0}.png", song.id));
             return client.RequestAsync(rq)
                 .SelectMany(x => x.Content.ReadAsByteArrayAsync())
+                .ObserveOn(RxApp.DeferredScheduler)
                 .SelectMany(x => {
                         var ret = new BitmapImage();
                         var mem = new MemoryRandomAccessStream(x);

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using Play.ViewModels;
+using ReactiveUI;
+using ReactiveUI.Routing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -35,6 +38,9 @@ namespace Play
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel = new AppBootstrapper();
+
+            // XXX: ReactiveUI Bug
+            viewHost.Router = (RoutingState)ViewModel.Router;
         }
 
         public AppBootstrapper ViewModel {

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject;
 using Play.Models;
+using Play.Views;
 using ReactiveUI;
 using ReactiveUI.Routing;
 using Windows.Security.Credentials;
+using Windows.UI.Core;
 
 namespace Play.ViewModels
 {
@@ -27,6 +30,9 @@ namespace Play.ViewModels
             Kernel = testKernel ?? createDefaultKernel();
             Kernel.Bind<IAppBootstrapper>().ToConstant(this);
             Router = router ?? new RoutingState();
+
+            // XXX: This is a ReactiveUI Bug
+            RxApp.DeferredScheduler = CoreDispatcherScheduler.Current;
 
             apiFactory = Kernel.TryGet<Func<IObservable<IPlayApi>>>("ApiFactory");
 
@@ -78,10 +84,14 @@ namespace Play.ViewModels
         Task<IPlayApi> loadCredentials()
         {
             var vault = new PasswordVault();
-            var baseUrl = vault.FindAllByUserName("BaseUrl").First().Password;
-            var token = vault.FindAllByUserName("Token").First().Password;
 
-            return Observable.Return((IPlayApi)createPlayApiFromCreds(baseUrl, token)).ToTask();
+            try {
+                var baseUrl = vault.FindAllByUserName("BaseUrl").First().Password;
+                var token = vault.FindAllByUserName("Token").First().Password;
+                return Observable.Return((IPlayApi)createPlayApiFromCreds(baseUrl, token)).ToTask();
+            } catch (Exception ex) {
+                return Observable.Throw<IPlayApi>(ex).ToTask();
+            }
         }
 
         PlayApi createPlayApiFromCreds(string baseUrl, string token)
@@ -105,6 +115,8 @@ namespace Play.ViewModels
             ret.Bind<IWelcomeViewModel>().To<WelcomeViewModel>();
             ret.Bind<IPlayViewModel>().To<PlayViewModel>();
             ret.Bind<ISearchViewModel>().To<SearchViewModel>();
+
+            ret.Bind<IViewFor<PlayViewModel>>().To<PlayView>();
 
             return ret;
         }
