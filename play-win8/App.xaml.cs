@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
-namespace play_win8
+namespace Play
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

@@ -7,7 +7,7 @@
     <ProjectGuid>{E4C9F727-5295-43BF-8C83-B0DC5DC0AA23}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>play_win8</RootNamespace>
+    <RootNamespace>Play</RootNamespace>
     <AssemblyName>play-win8</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
@@ -109,6 +109,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HttpClientHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

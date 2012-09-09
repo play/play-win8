@@ -14,7 +14,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="play_win8.App">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Play.App">
       <VisualElements DisplayName="Play" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="play-win8" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
