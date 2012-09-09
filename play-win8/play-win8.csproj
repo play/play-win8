@@ -131,6 +131,9 @@
     <Compile Include="Views\PlayView.xaml.cs">
       <DependentUpon>PlayView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SongTileView.xaml.cs">
+      <DependentUpon>SongTileView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -223,6 +226,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SongTileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -234,14 +241,17 @@
     <Reference Include="Ninject.WinRT">
       <HintPath>..\ext\Ninject.WinRT.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI.Routing_WinRT">
-      <HintPath>..\packages\reactiveui-xaml.3.99.2-beta\lib\WinRT45\ReactiveUI.Routing_WinRT.dll</HintPath>
+    <Reference Include="ReactiveUI.Routing_WinRT, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\reactiveui-xaml.3.99.3-beta\lib\WinRT45\ReactiveUI.Routing_WinRT.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI.Xaml_WinRT">
-      <HintPath>..\packages\reactiveui-xaml.3.99.2-beta\lib\WinRT45\ReactiveUI.Xaml_WinRT.dll</HintPath>
+    <Reference Include="ReactiveUI.Xaml_WinRT, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\reactiveui-xaml.3.99.3-beta\lib\WinRT45\ReactiveUI.Xaml_WinRT.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI_WinRT">
-      <HintPath>..\packages\reactiveui-core.3.99.2-beta\lib\WinRT45\ReactiveUI_WinRT.dll</HintPath>
+    <Reference Include="ReactiveUI_WinRT, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\reactiveui-core.3.99.3-beta\lib\WinRT45\ReactiveUI_WinRT.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive.Core, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.0.20823\lib\WinRT45\System.Reactive.Core.dll</HintPath>

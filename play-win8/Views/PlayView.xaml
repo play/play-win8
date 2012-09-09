@@ -37,7 +37,7 @@
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}" />
         </Grid>
 
-        <GridView x:Name="songsList" Grid.Row="1">
+        <GridView x:Name="AllSongs" Grid.Row="1">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Routing:ViewModelViewHost HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  ViewModel="{Binding}" />

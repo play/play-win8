@@ -30,12 +30,14 @@ namespace Play.Views
         {
             this.InitializeComponent();
 
-            //this.OneWayBind(ViewModel, x => x.AllSongs, x => x.songsList.ItemsSource);
-
-            RxApp.DeferredScheduler.Schedule(() => { 
-                this.WhenAny(x => x.ViewModel.AllSongs, x => x.Value)
-                    .Subscribe(x => songsList.ItemsSource = x);
+            RxApp.DeferredScheduler.Schedule(() => {
+                this.OneWayBind(ViewModel, x => x.AllSongs);
             });
+
+            this.PointerReleased += (o, e) =>
+                {
+                    var v = this;
+                };
         }
 
         public PlayViewModel ViewModel {

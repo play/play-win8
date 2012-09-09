@@ -117,6 +117,7 @@ namespace Play.ViewModels
             ret.Bind<ISearchViewModel>().To<SearchViewModel>();
 
             ret.Bind<IViewFor<PlayViewModel>>().To<PlayView>();
+            ret.Bind<IViewFor<SongTileViewModel>>().To<SongTileView>();
 
             return ret;
         }

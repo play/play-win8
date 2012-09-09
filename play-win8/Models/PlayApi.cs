@@ -121,7 +121,8 @@ namespace Play.Models
         public IObservable<Unit> ConnectToSongChangeNotifications()
         {
             // TODO: Port Pusher to Fx45 WebSockets
-            return Observable.Never<Unit>();
+            return Observable.Timer(DateTimeOffset.MinValue, TimeSpan.FromSeconds(90.0), RxApp.DeferredScheduler)
+                .Select(_ => Unit.Default);
             /*
             var rq = new RestRequest("streaming_info");
 
