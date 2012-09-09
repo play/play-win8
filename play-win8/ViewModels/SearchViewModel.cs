@@ -48,7 +48,7 @@ namespace Play.ViewModels
         public ReactiveCommand GoBack { get; protected set; }
 
         [Inject]
-        public SearchViewModel(IScreen hostScreen, ILoginMethods loginMethods, [Named("UserAccount")] IBlobCache userCache)
+        public SearchViewModel(IScreen hostScreen, ILoginMethods loginMethods)
         {
             HostScreen = hostScreen;
             SearchResults = new ReactiveCollection<ISongTileViewModel>();
@@ -66,11 +66,7 @@ namespace Play.ViewModels
                 .Throttle(TimeSpan.FromMilliseconds(700), RxApp.DeferredScheduler)
                 .InvokeCommand(PerformSearch);
 
-            var searchResults = PerformSearch.RegisterAsyncObservable(_ =>
-                userCache.GetOrFetchObject(
-                    "search__" + SearchQuery, 
-                    () => playApi.Search(SearchQuery), 
-                    RxApp.TaskpoolScheduler.Now + TimeSpan.FromMinutes(1.0)));
+            var searchResults = PerformSearch.RegisterAsyncObservable(_ => playApi.Search(SearchQuery));
 
             SearchResults = searchResults
                 .Do(_ => SearchResults.Clear())
@@ -79,7 +75,7 @@ namespace Play.ViewModels
                 .CreateCollection(x => (ISongTileViewModel) new SongTileViewModel(x, playApi));
 
             PerformSearch.ItemsInflight.StartWith(0)
-                .Select(x => x > 0 ? Visibility.Visible : Visibility.Hidden)
+                .Select(x => x > 0 ? Visibility.Visible : Visibility.Collapsed)
                 .ToProperty(this, x => x.SearchBusySpinner);
 
             PerformSearch.ThrownExceptions.Subscribe(_ => { });

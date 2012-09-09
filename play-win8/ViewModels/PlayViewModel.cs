@@ -137,4 +137,17 @@ namespace Play.ViewModels
             Search.Subscribe(_ => screen.Router.Navigate.Execute(RxApp.GetService<ISearchViewModel>()));
         }
     }
+
+    public static class EnumerableMixins
+    {
+        public static IEnumerable<T> StartWith<T>(this IEnumerable<T> This, params T[] these)
+        {
+            foreach(T item in these) {
+                yield return item;
+            }
+            foreach(T item in This) {
+                yield return item;
+            }
+        }
+    }
 }

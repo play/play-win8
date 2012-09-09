@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -12,6 +13,7 @@ using Play.Models;
 using ReactiveUI;
 using ReactiveUI.Routing;
 using ReactiveUI.Xaml;
+using Windows.System;
 
 namespace Play.ViewModels
 {
@@ -82,7 +84,7 @@ namespace Play.ViewModels
                     screen.Router.NavigateBack.Execute(null);
                 });
 
-            OpenTokenPage.Subscribe(_ => Process.Start(String.Format("{0}/token", BaseUrl)));
+            OpenTokenPage.Subscribe(_ => Launcher.LaunchUriAsync(new Uri(String.Format("{0}/token", BaseUrl))));
 
             var error = new Subject<string>();
             UserError.RegisterHandler(ex => {
@@ -112,10 +114,14 @@ namespace Play.ViewModels
 
         public IObservable<Unit> ConnectToPlay(string baseUrl, string token)
         {
-            var client = new RestClient(baseUrl);
-            client.AddDefaultHeader("Authorization", token);
+            var client = new HttpClient() {BaseAddress = new Uri(baseUrl)};
 
-            var api = new PlayApi(client, null);
+            var api = new PlayApi(client, (m,p) => {
+                var ret = new HttpRequestMessage(m, p);
+                ret.Headers.Add("Authorization", token);
+                return ret;
+            });
+
             return api.NowPlaying().Select(_ => Unit.Default);
         }
     }
