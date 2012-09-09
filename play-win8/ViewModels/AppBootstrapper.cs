@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
@@ -10,6 +11,7 @@ using Ninject;
 using Play.Models;
 using ReactiveUI;
 using ReactiveUI.Routing;
+using Windows.Security.Credentials;
 
 namespace Play.ViewModels
 {
@@ -22,8 +24,6 @@ namespace Play.ViewModels
         readonly Func<IObservable<IPlayApi>> apiFactory;
         public AppBootstrapper(IKernel testKernel = null, IRoutingState router = null)
         {
-            BlobCache.ApplicationName = "PlayForWindows";
-
             Kernel = testKernel ?? createDefaultKernel();
             Kernel.Bind<IAppBootstrapper>().ToConstant(this);
             Router = router ?? new RoutingState();
@@ -32,7 +32,8 @@ namespace Play.ViewModels
 
             RxApp.ConfigureServiceLocator(
                 (type, contract) => Kernel.Get(type, contract),
-                (type, contract) => Kernel.GetAll(type, contract));
+                (type, contract) => Kernel.GetAll(type, contract),
+                (c, i, s) => Kernel.Bind(i).To(c));
 
             LoadCredentials().Subscribe(
                 x => {
@@ -58,20 +59,17 @@ namespace Play.ViewModels
 
         public void EraseCredentialsAndNavigateToLogin()
         {
-            var blobCache = Kernel.Get<ISecureBlobCache>();
-
-            blobCache.Invalidate("BaseUrl");
-            blobCache.Invalidate("Token");
+            var vault = new PasswordVault();
+            foreach(var v in vault.FindAllByResource("play")) { vault.Remove(v); }
 
             Router.Navigate.Execute(Kernel.Get<IWelcomeViewModel>());
         }
 
         public void SaveCredentials(string baseUrl, string username)
         {
-            var blobCache = Kernel.Get<ISecureBlobCache>();
-
-            blobCache.InsertObject("BaseUrl", baseUrl);
-            blobCache.InsertObject("Token", username);
+            var vault = new PasswordVault();
+            vault.Add(new PasswordCredential() { Resource = "play", UserName = "BaseUrl", Password = baseUrl });
+            vault.Add(new PasswordCredential() { Resource = "play", UserName = "Token", Password = username });
 
             CurrentAuthenticatedClient = createPlayApiFromCreds(baseUrl, username);
         }
@@ -79,22 +77,22 @@ namespace Play.ViewModels
         public IObservable<IPlayApi> LoadCredentials() { return apiFactory != null ? apiFactory() : loadCredentials().ToObservable(); }
         Task<IPlayApi> loadCredentials()
         {
-            var blobCache = Kernel.Get<ISecureBlobCache>();
+            var vault = new PasswordVault();
+            var baseUrl = vault.FindAllByUserName("BaseUrl").First().Password;
+            var token = vault.FindAllByUserName("Token").First().Password;
 
-            return Observable.Zip(
-                    blobCache.GetObjectAsync<string>("BaseUrl"), blobCache.GetObjectAsync<string>("Token"),
-                    (BaseUrl, Token) => new { BaseUrl, Token })
-                .Select(x => (IPlayApi)createPlayApiFromCreds(x.BaseUrl, x.Token))
-                .ToTask();
+            return Observable.Return((IPlayApi)createPlayApiFromCreds(baseUrl, token)).ToTask();
         }
 
         PlayApi createPlayApiFromCreds(string baseUrl, string token)
         {
-            var localMachine = Kernel.Get<IBlobCache>("LocalMachine");
-            var rc = new RestClient(baseUrl);
-            rc.AddDefaultHeader("Authorization", token);
+            var rc = new HttpClient() {BaseAddress = new Uri(baseUrl)};
+            var ret = new PlayApi(rc, (m,p) => {
+                var rq = new HttpRequestMessage(m, p);
+                rq.Headers.Add("Authorization", token);
+                return rq;
+            });
 
-            var ret = new PlayApi(rc, localMachine);
             return ret;
         }
 
@@ -107,35 +105,8 @@ namespace Play.ViewModels
             ret.Bind<IWelcomeViewModel>().To<WelcomeViewModel>();
             ret.Bind<IPlayViewModel>().To<PlayViewModel>();
             ret.Bind<ISearchViewModel>().To<SearchViewModel>();
-            ret.Bind<IViewForViewModel<WelcomeViewModel>>().To<WelcomeView>();
-            ret.Bind<IViewForViewModel<PlayViewModel>>().To<PlayView>();
-            ret.Bind<IViewForViewModel<SearchViewModel>>().To<SearchView>();
-            ret.Bind<IViewForViewModel<SongTileViewModel>>().To<SongTileView>().InTransientScope();
-
-#if DEBUG
-            var testBlobCache = new TestBlobCache();
-            ret.Bind<IBlobCache>().ToConstant(testBlobCache).Named("LocalMachine");
-            ret.Bind<IBlobCache>().ToConstant(testBlobCache).Named("UserAccount");
-            ret.Bind<ISecureBlobCache>().ToConstant(testBlobCache);
-#else
-            ret.Bind<ISecureBlobCache>().ToConstant(BlobCache.Secure);
-            ret.Bind<IBlobCache>().ToConstant(BlobCache.LocalMachine).Named("LocalMachine");
-            ret.Bind<IBlobCache>().ToConstant(BlobCache.UserAccount).Named("UserAccount");
-#endif
 
             return ret;
-        }
-    }
-
-    public static class LoginMethodsMixins
-    {
-        public static void LoadAuthenticatedUserFromCache(ILoginMethods login, ISecureBlobCache loginCache)
-        {
-            Observable.Zip(loginCache.GetObjectAsync<string>("BaseUrl"), loginCache.GetObjectAsync<string>("Token"),
-                (url, name) => new Tuple<string, string>(url, name))
-                .Catch(Observable.Return<Tuple<string, string>>(null))
-                .Subscribe(x => {
-                });
         }
     }
 }
