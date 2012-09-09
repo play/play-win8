@@ -9,12 +9,20 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     
-    <Grid Width="300" Height="300">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Image x:Name="AlbumArt" />
-        <TextBlock Grid.Row="1" x:Name="name" FontSize="24" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="64"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="AlbumArt" Grid.Column="1" VerticalAlignment="Center" Width="128" />
+
+        <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center">
+            <TextBlock Grid.Row="1" x:Name="name" FontSize="32" Foreground="Black" />
+            <TextBlock Grid.Row="1" x:Name="artist" FontSize="12" Foreground="Gray" />
+            <TextBlock Grid.Row="1" x:Name="album" FontSize="12" Foreground="Gray" />
+        </StackPanel>
+
     </Grid>
 </UserControl>

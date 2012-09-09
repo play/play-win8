@@ -13,7 +13,7 @@
     <Page.Resources>
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
+        <x:String x:Key="AppName">Play</x:String>
     </Page.Resources>
 
     <!--
@@ -22,28 +22,40 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition Width="300"/>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="107*"/>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="172*"/>
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}" />
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}" HorizontalAlignment="Left" />
         </Grid>
 
-        <GridView x:Name="AllSongs" Grid.Row="1">
-            <GridView.ItemTemplate>
+        <ListView x:Name="AllSongs" HorizontalAlignment="Left" Height="628" Margin="0,0,-7,0" Grid.Row="1" VerticalAlignment="Top" Width="1073" Grid.Column="1" Background="#FFF9F9F9" Grid.RowSpan="3">
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Routing:ViewModelViewHost HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  ViewModel="{Binding}" />
+                    <Routing:ViewModelViewHost ViewModel="{Binding}" HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" />
                 </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Image x:Name="CurrentAlbumArt" HorizontalAlignment="Left" Height="194" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="280"/>
+        <StackPanel HorizontalAlignment="Left" Height="50" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="280" Orientation="Vertical">
+			<TextBlock x:Name="name" />
+			<TextBlock x:Name="album" Foreground="Gray" />
+		</StackPanel>
 
         <VisualStateManager.VisualStateGroups>
 

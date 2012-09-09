@@ -28,6 +28,8 @@ namespace Play.Views
             RxApp.DeferredScheduler.Schedule(() => {
                 this.OneWayBind(ViewModel, x => x.AlbumArt);
                 this.OneWayBind(ViewModel, x => x.Model.name);
+                this.OneWayBind(ViewModel, x => x.Model.album);
+                this.OneWayBind(ViewModel, x => x.Model.artist);
             });
         }
 

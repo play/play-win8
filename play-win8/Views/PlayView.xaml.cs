@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using Play.Common;
 using Play.ViewModels;
 using ReactiveUI;
@@ -32,6 +33,15 @@ namespace Play.Views
 
             RxApp.DeferredScheduler.Schedule(() => {
                 this.OneWayBind(ViewModel, x => x.AllSongs);
+                this.WhenAny(x => x.ViewModel.CurrentSong.name, x => x.Value ?? "")
+                    .BindTo(this, x => x.name.Text);
+                this.WhenAny(x => x.ViewModel.CurrentSong.album, x => x.Value ?? "")
+                    .BindTo(this, x => x.album.Text);
+
+                this.WhenAny(x => x.ViewModel.AllSongs, x => x.Value)
+                    .Where(x => x != null && x.Any())
+                    .SelectMany(x => x.First().WhenAny(y => y.AlbumArt, y => y.Value))
+                    .BindTo(this, x => x.CurrentAlbumArt.Source);
             });
 
             this.PointerReleased += (o, e) =>
