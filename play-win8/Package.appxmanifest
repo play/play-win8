@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="53ba9011-4c71-44f8-93dd-76a28d6a9570" Publisher="CN=Paul" Version="1.0.0.0" />
+  <Identity Name="53ba9011-4c71-44f8-93dd-76a28d6a9571" Publisher="CN=Paul" Version="1.0.0.0" />
   <Properties>
     <DisplayName>play-win8</DisplayName>
     <PublisherDisplayName>Paul</PublisherDisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Play.App">
-      <VisualElements DisplayName="Play" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="play-win8" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
+      <VisualElements DisplayName="Play" Logo="Assets\Logo.png" SmallLogo="Assets\Play-SmallLogo.png" Description="play-win8" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>

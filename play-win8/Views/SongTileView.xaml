@@ -6,23 +6,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=TemplatedParent}}"
     d:DesignHeight="300"
     d:DesignWidth="400">
     
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="64"/>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Border BorderBrush="#FCE1E1E1" BorderThickness="0,0,0,2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Image x:Name="AlbumArt" Grid.Column="1" VerticalAlignment="Center" Width="128" />
 
-        <StackPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center">
-            <TextBlock Grid.Row="1" x:Name="name" FontSize="32" Foreground="Black" />
-            <TextBlock Grid.Row="1" x:Name="artist" FontSize="12" Foreground="Gray" />
-            <TextBlock Grid.Row="1" x:Name="album" FontSize="12" Foreground="Gray" />
-        </StackPanel>
+            <Border VerticalAlignment="Center" Width="144" Margin="30" BorderThickness="2,2,2,2" BorderBrush="#FCE1E1E1">
+                <Image x:Name="AlbumArt" />
+            </Border>
 
-    </Grid>
+            <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Grid.Row="1" x:Name="name" FontSize="32" FontWeight="Bold" Foreground="Black" />
+                <TextBlock Grid.Row="1" x:Name="artist" FontSize="21" Foreground="#FFDA32E4" Margin="0,2,0,0" />
+                <TextBlock Grid.Row="1" x:Name="album" FontSize="21" Foreground="#FFDA32E4" Margin="0,2,0,0" />
+            </StackPanel>
+
+        </Grid>
+    </Border>
 </UserControl>

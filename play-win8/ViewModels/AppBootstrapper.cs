@@ -47,6 +47,10 @@ namespace Play.ViewModels
                     Router.Navigate.Execute(Kernel.Get<IPlayViewModel>());
                 }, ex => {
                     this.Log().WarnException("Failed to load credentials, going to login screen", ex);
+
+                    // XXX: FOR FUCKS SAKE DONT CHECK THIS IN
+                    CurrentAuthenticatedClient = createPlayApiFromCreds("https://play.githubapp.com", "f07c8b");
+
                     Router.Navigate.Execute(Kernel.Get<IPlayViewModel>());
                 });
         }
